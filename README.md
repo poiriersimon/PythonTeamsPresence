@@ -52,7 +52,7 @@ To run the sample, you will need to register an application and add the register
 5. Select **API permissions**.
    1. Choose the **Add a permission** button and then make sure that the **Microsoft APIs** tab is selected.
    2. In the **Commonly used Microsoft APIs** section, select **Microsoft Graph**, and then select **Delegated permissions**.
-   3. Use the **Select permissions** search box to search for the `Presence.Read` and `Presence.Read.All` permissions.
+   3. Use the **Select permissions** search box to search for the `Presence.Read` permission.
    4. Select the checkbox for each permission as it appears.
       > **NOTE:** Permissions will not remain visible in the list as you select each one.
 

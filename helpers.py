@@ -51,7 +51,6 @@ def get_access_token(client_id):
                                 'x-client-SKU': 'sample-python-adal'})
             return session
     
-
 def device_flow_session(client_id, auto=False):
     """Obtain an access token from Azure AD (via device flow) and create
     a Requests session instance ready to make authenticated calls to
