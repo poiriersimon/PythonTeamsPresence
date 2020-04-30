@@ -22,7 +22,8 @@ script_dir = os.path.dirname(__file__) #<-- absolute dir the script is in
 rel_path = "RefreshToken.txt"
 RefreshTokenFile = os.path.join(script_dir, rel_path)
 
-def get_access_token(client_id):
+
+def get_access_token(client_id, auto=True):
     cache = msal.SerializableTokenCache()
     if os.path.exists(RefreshTokenFile):
         cache.deserialize(open(RefreshTokenFile, "r").read())
@@ -70,7 +71,20 @@ def get_access_token(client_id):
         # Ideally you should wait here, in order to save some unnecessary polling
         # input("Press Enter after signing in from another device to proceed, CTRL+C to abort.")
 
-        result = app.acquire_token_by_device_flow(flow)  # By default it will block
+        device_code = app.initiate_device_flow(scopes=config.SCOPES)
+        
+        if auto:
+            pyperclip.copy(device_code['user_code']) # copy user code to clipboard
+            webbrowser.open(device_code['verification_uri']) # open browser
+            print('')
+            print(f'The code {device_code["user_code"]} has been copied to your clipboard, '
+                f'and your web browser is opening {device_code["verification_uri"]}. '
+                'Paste the code to sign in.')
+            print('')
+        else:
+            print(device_code['message'])
+
+        result = app.acquire_token_by_device_flow(device_code)  # By default it will block
             # You can follow this instruction to shorten the block time
             #    https://msal-python.readthedocs.io/en/latest/#msal.PublicClientApplication.acquire_token_by_device_flow
             # or you may even turn off the blocking behavior,
