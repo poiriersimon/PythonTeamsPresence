@@ -102,7 +102,8 @@ This project has adopted the [Microsoft Open Source Code of Conduct](https://ope
 
 * Authentication:
     * [Microsoft ADAL for Python](https://github.com/AzureAD/azure-activedirectory-library-for-python)
-    * [Python authentication samples for Microsoft Graph](https://github.com/microsoftgraph/python-sample-auth)
+    * [MSAL Python Docs](https://msal-python.readthedocs.io/en/latest/#)
+    * [Python authentication samples for Microsoft Graph](https://github.com/AzureAD/microsoft-authentication-library-for-python)
     * [OAuth 2.0 Device Flow for Browserless and Input Constrained Devices](https://tools.ietf.org/html/draft-ietf-oauth-device-flow-07)
 * Graph API documentation:
     * [Get a user](https://developer.microsoft.com/en-us/graph/docs/api-reference/v1.0/api/user_get)
