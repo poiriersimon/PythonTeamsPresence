@@ -74,8 +74,6 @@ Follow these steps to run the sample app:
 
 3. After consenting to permissions, you'll see a message giving your Presence and Activity
 
-To simplify the multiple run of the script, it store the Refresh Token in a file with the script, please threath this as a password.
-
 ## Helper functions
 
 Several helper functions in [helpers.py](https://github.com/microsoftgraph/python-sample-console-app/blob/master/helpers.py) provide simple wrappers for common Graph operations, and provide examples of how to make authenticated Graph requests via the methods of the session object. These helper functions can be used with any auth library &mdash; the only requirement is that the session object has a valid Graph access token stored in its ```Authorization``` header.
@@ -87,12 +85,6 @@ In this sample, the session object sends the required ```Authorization``` header
 ### api_endpoint(url)
 
 Converts a relative path such as ```/me/photo/$value``` to a full URI based on the current RESOURCE and API_VERSION settings in config.py.
-
-### device_flow_session(client_id, auto=False)
-
-Obtains an access token from Azure AD (via device flow) and create a Requests session instance ready to make authenticated calls to Microsoft Graph. The only required argument is the **client_id** of the [registered application](#application-registration).
-
-The optional **auto** argument can be set to ```True``` to automatically launch the authorization URL in your default browser and copy the user code to the clipboard. This can save time during repetitive dev/test activities.
 
 ### get_access_token(client_id)
 
