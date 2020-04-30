@@ -101,16 +101,12 @@ This project has adopted the [Microsoft Open Source Code of Conduct](https://ope
 ## Resources
 
 * Authentication:
-    * [Microsoft ADAL for Python](https://github.com/AzureAD/azure-activedirectory-library-for-python)
+    * [Microsoft MSAL for Python](https://github.com/AzureAD/microsoft-authentication-library-for-python)
     * [MSAL Python Docs](https://msal-python.readthedocs.io/en/latest/#)
-    * [Python authentication samples for Microsoft Graph](https://github.com/AzureAD/microsoft-authentication-library-for-python)
+    * [Python authentication samples for Microsoft Graph](https://github.com/AzureAD/microsoft-authentication-library-for-python/tree/dev/sample)
     * [OAuth 2.0 Device Flow for Browserless and Input Constrained Devices](https://tools.ietf.org/html/draft-ietf-oauth-device-flow-07)
 * Graph API documentation:
-    * [Get a user](https://developer.microsoft.com/en-us/graph/docs/api-reference/v1.0/api/user_get)
-    * [Get photo](https://developer.microsoft.com/en-us/graph/docs/api-reference/v1.0/api/profilephoto_get)
-    * [Upload or replace the contents of a DriveItem](https://developer.microsoft.com/en-us/graph/docs/api-reference/v1.0/api/driveitem_put_content)
-    * [Create a sharing link for a DriveItem](https://developer.microsoft.com/en-us/graph/docs/api-reference/v1.0/api/driveitem_createlink)
-    * [Send mail](https://developer.microsoft.com/en-us/graph/docs/api-reference/v1.0/api/user_sendmail)
+    * [Get Presence](https://docs.microsoft.com/en-us/graph/api/presence-get?view=graph-rest-beta&tabs=http)
 * Other Python samples for Microsoft Graph:
     * [Sending mail via Microsoft Graph from Python](https://github.com/microsoftgraph/python-sample-send-mail) (web app)
     * [Working with paginated Microsoft Graph responses in Python](https://github.com/microsoftgraph/python-sample-pagination)
