@@ -11,17 +11,31 @@ import sys
 import json
 
 import msal
+import atexit
 
 import pyperclip
 import requests
-import os
 
 import config
 
+script_dir = os.path.dirname(__file__) #<-- absolute dir the script is in
+rel_path = "RefreshToken.txt"
+RefreshTokenFile = os.path.join(script_dir, rel_path)
+
 def get_access_token(client_id):
+    cache = msal.SerializableTokenCache()
+    if os.path.exists(RefreshTokenFile):
+        cache.deserialize(open(RefreshTokenFile, "r").read())
+    atexit.register(lambda:
+        open(RefreshTokenFile, "w").write(cache.serialize())
+        # Hint: The following optional line persists only when state changed
+        if cache.has_state_changed else None
+    )
+
     app = msal.PublicClientApplication(
         client_id,
-        authority=config.AUTHORITY_URL
+        authority=config.AUTHORITY_URL,
+        token_cache = cache
         )
 
     # The pattern to acquire a token looks like this.
@@ -31,7 +45,7 @@ def get_access_token(client_id):
     #   completely skip the following cache part. But here we demonstrate it anyway.
     # We now check the cache to see if we have some end users signed in before.
     accounts = app.get_accounts()
-    print(accounts)
+    
     if accounts:
         logging.info("Account(s) exists in cache, probably with token too. Let's try.")
         print("Pick the account you want to use to proceed:")

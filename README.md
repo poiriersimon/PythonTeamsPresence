@@ -74,6 +74,8 @@ Follow these steps to run the sample app:
 
 3. After consenting to permissions, you'll see a message giving your Presence and Activity
 
+To simplify the multiple run of the script, it store the Refresh Token in a file with the script, please threath this as a password.
+
 ## Helper functions
 
 Several helper functions in [helpers.py](https://github.com/microsoftgraph/python-sample-console-app/blob/master/helpers.py) provide simple wrappers for common Graph operations, and provide examples of how to make authenticated Graph requests via the methods of the session object. These helper functions can be used with any auth library &mdash; the only requirement is that the session object has a valid Graph access token stored in its ```Authorization``` header.
