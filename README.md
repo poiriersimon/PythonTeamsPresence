@@ -4,7 +4,7 @@
 
 This sample uses Microsoft Graph to read your user Teams presence status.
 
-This is based on the [Python console application for Microsoft Graph Sample](https://docs.microsoft.com/en-us/samples/microsoftgraph/python-sample-console-app/python-console-application-for-microsoft-graph/)
+This is based on the [Python console application for Microsoft Graph Sample](https://docs.microsoft.com/en-us/samples/microsoftgraph/python-sample-console-app/python-console-application-for-microsoft-graph/) and [microsoft-authentication-library-for-python](https://github.com/AzureAD/microsoft-authentication-library-for-python/blob/dev/sample/device_flow_sample.py)
 
 Authentication is handled via [device flow authentication](#device-flow-authentication), the recommended approach for console applications. If you're looking for examples of how to work with Microsoft Graph from Python _web applications_, see [Python authentication samples for Microsoft Graph](https://github.com/microsoftgraph/python-sample-auth). 
 
@@ -87,12 +87,6 @@ In this sample, the session object sends the required ```Authorization``` header
 ### api_endpoint(url)
 
 Converts a relative path such as ```/me/photo/$value``` to a full URI based on the current RESOURCE and API_VERSION settings in config.py.
-
-### device_flow_session(client_id, auto=False)
-
-Obtains an access token from Azure AD (via device flow) and create a Requests session instance ready to make authenticated calls to Microsoft Graph. The only required argument is the **client_id** of the [registered application](#application-registration).
-
-The optional **auto** argument can be set to ```True``` to automatically launch the authorization URL in your default browser and copy the user code to the clipboard. This can save time during repetitive dev/test activities.
 
 ### get_access_token(client_id)
 

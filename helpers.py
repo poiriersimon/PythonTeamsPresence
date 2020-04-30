@@ -6,17 +6,86 @@ import mimetypes
 import os
 import urllib
 import webbrowser
+import logging
+import sys
+import json
 
-from adal import AuthenticationContext
+import msal
+import atexit
+
 import pyperclip
 import requests
-import os
 
 import config
 
 script_dir = os.path.dirname(__file__) #<-- absolute dir the script is in
 rel_path = "RefreshToken.txt"
 RefreshTokenFile = os.path.join(script_dir, rel_path)
+
+def get_access_token(client_id):
+    cache = msal.SerializableTokenCache()
+    if os.path.exists(RefreshTokenFile):
+        cache.deserialize(open(RefreshTokenFile, "r").read())
+    atexit.register(lambda:
+        open(RefreshTokenFile, "w").write(cache.serialize())
+        # Hint: The following optional line persists only when state changed
+        if cache.has_state_changed else None
+    )
+
+    app = msal.PublicClientApplication(
+        client_id,
+        authority=config.AUTHORITY_URL,
+        token_cache = cache
+        )
+
+    # The pattern to acquire a token looks like this.
+    result = None
+
+    # Note: If your device-flow app does not have any interactive ability, you can
+    #   completely skip the following cache part. But here we demonstrate it anyway.
+    # We now check the cache to see if we have some end users signed in before.
+    accounts = app.get_accounts()
+    
+    if accounts:
+        logging.info("Account(s) exists in cache, probably with token too. Let's try.")
+        print("Pick the account you want to use to proceed:")
+        for a in accounts:
+            print(a["username"])
+        # Assuming the end user chose this one
+        chosen = accounts[0]
+        # Now let's try to find a token in cache for this account
+        result = app.acquire_token_silent(config.SCOPES, account=chosen)
+
+    if not result:
+        logging.info("No suitable token exists in cache. Let's get a new one from AAD.")
+
+        flow = app.initiate_device_flow(scopes=config.SCOPES)
+        if "user_code" not in flow:
+            raise ValueError(
+                "Fail to create device flow. Err: %s" % json.dumps(flow, indent=4))
+
+        print(flow["message"])
+        sys.stdout.flush()  # Some terminal needs this to ensure the message is shown
+
+        # Ideally you should wait here, in order to save some unnecessary polling
+        # input("Press Enter after signing in from another device to proceed, CTRL+C to abort.")
+
+        result = app.acquire_token_by_device_flow(flow)  # By default it will block
+            # You can follow this instruction to shorten the block time
+            #    https://msal-python.readthedocs.io/en/latest/#msal.PublicClientApplication.acquire_token_by_device_flow
+            # or you may even turn off the blocking behavior,
+            # and then keep calling acquire_token_by_device_flow(flow) in your own customized loop.
+
+    if "access_token" in result:
+        session = requests.Session()
+        session.headers.update({'Authorization': f'Bearer {result["access_token"]}',
+                            'SdkVersion': 'sample-python-msal',
+                            'x-client-SKU': 'sample-python-msal'})
+        return session
+    else:
+        print(result.get("error"))
+        print(result.get("error_description"))
+        print(result.get("correlation_id"))  # You may need this when reporting a bug
 
 def api_endpoint(url):
     """Convert a relative path such as /me/photo/$value to a full URI based
@@ -26,71 +95,3 @@ def api_endpoint(url):
         return url # url is already complete
     return urllib.parse.urljoin(f'{config.RESOURCE}/{config.API_VERSION}/',
                                 url.lstrip('/'))
-
-def get_access_token(client_id):
-    with open(RefreshTokenFile, 'r') as file:
-        RefreshToken = file.read().replace('\n', '')
-    
-    if not RefreshToken:
-        session = device_flow_session(config.CLIENT_ID, True)
-        return session
-    else:
-        ctx = AuthenticationContext(config.AUTHORITY_URL, api_version=None)
-        try:
-            token_response = ctx.acquire_token_with_refresh_token(RefreshToken, client_id, config.RESOURCE)
-        except:
-            session = device_flow_session(config.CLIENT_ID, True)
-            return session
-        if not token_response.get('accessToken', None):
-            session = device_flow_session(config.CLIENT_ID, True)
-            return session
-        else:
-            session = requests.Session()
-            session.headers.update({'Authorization': f'Bearer {token_response["accessToken"]}',
-                                'SdkVersion': 'sample-python-adal',
-                                'x-client-SKU': 'sample-python-adal'})
-            return session
-    
-def device_flow_session(client_id, auto=False):
-    """Obtain an access token from Azure AD (via device flow) and create
-    a Requests session instance ready to make authenticated calls to
-    Microsoft Graph.
-
-    client_id = Application ID for registered "Azure AD only" V1-endpoint app
-    auto      = whether to copy device code to clipboard and auto-launch browser
-
-    Returns Requests session object if user signed in successfully. The session
-    includes the access token in an Authorization header.
-
-    User identity must be an organizational account (ADAL does not support MSAs).
-    """
-    ctx = AuthenticationContext(config.AUTHORITY_URL, api_version=None)
-    device_code = ctx.acquire_user_code(config.RESOURCE,
-                                        client_id)
-
-    # display user instructions
-    if auto:
-        pyperclip.copy(device_code['user_code']) # copy user code to clipboard
-        webbrowser.open(device_code['verification_url']) # open browser
-        print(f'The code {device_code["user_code"]} has been copied to your clipboard, '
-              f'and your web browser is opening {device_code["verification_url"]}. '
-              'Paste the code to sign in.')
-    else:
-        print(device_code['message'])
-
-    token_response = ctx.acquire_token_with_device_code(config.RESOURCE,
-                                                        device_code,
-                                                        client_id)
-    if not token_response.get('accessToken', None):
-        return None
-    
-    with open(RefreshTokenFile, "w") as RefreshToken:
-        RefreshToken.write(token_response["refreshToken"])
-
-    RefreshToken = token_response["refreshToken"]
-
-    session = requests.Session()
-    session.headers.update({'Authorization': f'Bearer {token_response["accessToken"]}',
-                            'SdkVersion': 'sample-python-adal',
-                            'x-client-SKU': 'sample-python-adal'})
-    return session
