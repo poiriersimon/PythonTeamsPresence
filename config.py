@@ -4,6 +4,7 @@
 CLIENT_ID = '025512d1-3b11-49ec-ba0c-b888fbaf59c2'
 
 AUTHORITY_URL = 'https://login.microsoftonline.com/common'
+SCOPES = ['Presence.Read']
 RESOURCE = 'https://graph.microsoft.com'
 API_VERSION = 'beta'
 

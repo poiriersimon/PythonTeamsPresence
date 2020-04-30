@@ -4,7 +4,7 @@
 
 This sample uses Microsoft Graph to read your user Teams presence status.
 
-This is based on the [Python console application for Microsoft Graph Sample](https://docs.microsoft.com/en-us/samples/microsoftgraph/python-sample-console-app/python-console-application-for-microsoft-graph/)
+This is based on the [Python console application for Microsoft Graph Sample](https://docs.microsoft.com/en-us/samples/microsoftgraph/python-sample-console-app/python-console-application-for-microsoft-graph/) and [microsoft-authentication-library-for-python](https://github.com/AzureAD/microsoft-authentication-library-for-python/blob/dev/sample/device_flow_sample.py)
 
 Authentication is handled via [device flow authentication](#device-flow-authentication), the recommended approach for console applications. If you're looking for examples of how to work with Microsoft Graph from Python _web applications_, see [Python authentication samples for Microsoft Graph](https://github.com/microsoftgraph/python-sample-auth). 
 

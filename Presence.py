@@ -5,7 +5,7 @@ import pprint
 
 import config
 
-from helpers import api_endpoint, device_flow_session, get_access_token
+from helpers import api_endpoint, get_access_token
 
 def getpresence(session):
     """Get Presence from loged in user"""
