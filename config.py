@@ -1,7 +1,7 @@
 """Configuration settings for console app using device flow authentication
 """
 
-CLIENT_ID = '025512d1-3b11-49ec-ba0c-b888fbaf59c2'
+CLIENT_ID = 'ENTER_YOUR_CLIENT_ID'
 
 AUTHORITY_URL = 'https://login.microsoftonline.com/common'
 SCOPES = ['Presence.Read']
